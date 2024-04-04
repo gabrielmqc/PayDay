@@ -24,7 +24,7 @@ public class Eventos {
         // Construtor vazio necessário para Lombok
     }
 
-    public void adicionarHoraExtra50(float nivelSalarial) {
+    public void adicionarHoraExtra50(float nivelSalarial, Eventos eventos) {
         this.horaExtra50 += nivelSalarial / 20; // Calcula o valor da hora extra 50%
     }
 
@@ -98,4 +98,5 @@ public class Eventos {
         this.auxilioCrecheBaba += valorPorDependente * quantidadeDependentes; // Adiciona o valor ao atributo
                                                                               // correspondente
     }
+
 }

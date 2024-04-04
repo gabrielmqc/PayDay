@@ -36,7 +36,7 @@ public class Funcionario extends PessoaFisica {
     }
 
     public void adicionarHoraExtra50() {
-        eventos.adicionarHoraExtra50(this.nivelSalarial); // Passa o nivelSalarial como argumento
+        eventos.adicionarHoraExtra50(this.nivelSalarial, eventos); // Passa o nivelSalarial como argumento
     }
 
 
