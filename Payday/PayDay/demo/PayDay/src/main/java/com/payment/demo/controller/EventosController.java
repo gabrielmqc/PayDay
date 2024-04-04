@@ -9,72 +9,64 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/funcionarios/{funcionarioId}/eventos")
 public class EventosController {
 
-    private Eventos eventosService;
+    private EventosService eventosService;
 
     @Autowired
-public EventosController(Eventos eventosService) {
-    this.eventosService = eventosService;
-}
+    public EventosController(EventosService eventosService) {
+        this.eventosService = eventosService;
+    }
 
     @PostMapping("/horas-extras-50")
     public ResponseEntity<Eventos> adicionarHoraExtra50(@PathVariable Long funcionarioId, @RequestBody Eventos eventos) {
-        eventosService.adicionarHoraExtra50(funcionarioId, eventos);
+        eventos = eventosService.adicionarHoraExtra50(funcionarioId, eventos.getHorasExtras50());
         return ResponseEntity.ok(eventos);
     }
 
     @PostMapping("/horas-extras-100")
     public ResponseEntity<Eventos> adicionarHoraExtra100(@PathVariable Long funcionarioId, @RequestBody Eventos eventos) {
-        eventosService.adicionarHoraExtra100(funcionarioId);
+        eventos = eventosService.adicionarHoraExtra100(funcionarioId, eventos.getHorasExtras100());
         return ResponseEntity.ok(eventos);
     }
 
     @PutMapping("/faltas")
-    public ResponseEntity<Eventos> subtrairFaltas(@PathVariable Long funcionarioId, @RequestBody Eventos eventos)(
-        eventosService.subtrairFaltas(funcionarioId);
+    public ResponseEntity<Eventos> subtrairFaltas(@PathVariable Long funcionarioId, @RequestBody Eventos eventos) {
+        eventosService.subtrairFaltas(funcionarioId, eventos.getFaltas());
         return ResponseEntity.ok(eventos);
     }
 
     @PutMapping("/atrasos")
-public ResponseEntity<Eventos> descontoPorAtraso(@PathVariable Long funcionarioId, @RequestBody Eventos eventos) {
-    // Use the provided eventos object and call the appropriate method from eventosService
-    Eventos updatedEventos = eventosService.descontoPorAtraso(funcionarioId, eventos.getHorasDeAtraso(), eventos);
-    return ResponseEntity.ok(updatedEventos);
-}
+    public ResponseEntity<Eventos> descontoPorAtraso(@PathVariable Long funcionarioId, @RequestBody Eventos eventos) {
+        Eventos updatedEventos = eventosService.descontoPorAtraso(funcionarioId, eventos.getHorasDeAtraso(), eventos);
+        return ResponseEntity.ok(updatedEventos);
+    }
 
-@PutMapping("/descanso-semanal-remunerado")
-public ResponseEntity<Eventos> descansoSemanalRemunerado(@PathVariable Long funcionarioId, @RequestBody Eventos eventos) {
-    // Use the provided eventos object (eventos) and update it with the result of the service method
-    Eventos updatedEventos = eventosService.descansoSemanalRemunerado(funcionarioId, eventos);
-    // Return the updated eventos object
-    return ResponseEntity.ok(updatedEventos);
-}
+    @PutMapping("/descanso-semanal-remunerado")
+    public ResponseEntity<Eventos> descansoSemanalRemunerado(@PathVariable Long funcionarioId, @RequestBody Eventos eventos) {
+        Eventos updatedEventos = eventosService.descansoSemanalRemunerado(funcionarioId, eventos);
+        return ResponseEntity.ok(updatedEventos);
+    }
 
+    @PutMapping("/adicional-noturno")
+    public ResponseEntity<Eventos> adicionalNoturno(@PathVariable Long funcionarioId, @RequestBody Eventos eventos) {
+        Eventos updatedEventos = eventosService.adicionalNoturno(funcionarioId, eventos);
+        return ResponseEntity.ok(updatedEventos);
+    }
 
-@PutMapping("/adicional-noturno")
-public ResponseEntity<Eventos> adicionalNoturno(@PathVariable Long funcionarioId, @RequestBody Eventos eventos) {
-    // Use the provided eventos object and call the appropriate method from eventosService
-    Eventos updatedEventos = eventosService.adicionalNoturno(funcionarioId, eventos);
-    return ResponseEntity.ok(updatedEventos);
-}
+    @PutMapping("/salario-familia")
+    public ResponseEntity<Eventos> salarioFamilia(@PathVariable Long funcionarioId, @RequestBody Eventos eventos) {
+        Eventos updatedEventos = eventosService.salarioFamilia(funcionarioId, eventos);
+        return ResponseEntity.ok(updatedEventos);
+    }
 
-@PutMapping("/salario-familia")
-public ResponseEntity<Eventos> salarioFamilia(@PathVariable Long funcionarioId, @RequestBody Eventos eventos) {
-    // Use the provided eventos object and call the appropriate method from eventosService
-    Eventos updatedEventos = eventosService.salarioFamilia(funcionarioId, eventos);
-    return ResponseEntity.ok(updatedEventos);
-}
+    @PutMapping("/diaria-viagem")
+    public ResponseEntity<Eventos> diariaViagem(@PathVariable Long funcionarioId, @RequestBody Eventos eventos) {
+        Eventos updatedEventos = eventosService.diariaViagem(funcionarioId, eventos);
+        return ResponseEntity.ok(updatedEventos);
+    }
 
-@PutMapping("/diaria-viagem")
-public ResponseEntity<Eventos> diariaViagem(@PathVariable Long funcionarioId, @RequestBody Eventos eventos) {
-    // Use the provided eventos object and call the appropriate method from eventosService
-    Eventos updatedEventos = eventosService.diariaViagem(funcionarioId, eventos);
-    return ResponseEntity.ok(updatedEventos);
-}
-
-@PutMapping("/auxilio-creche-baba")
-public ResponseEntity<Eventos> auxilioCrecheBaba(@PathVariable Long funcionarioId, @RequestBody Eventos eventos) {
-    // Use the provided eventos object and call the appropriate method from eventosService
-    Eventos updatedEventos = eventosService.auxilioCrecheBaba(funcionarioId, eventos);
-    return ResponseEntity.ok(updatedEventos);
-}
+    @PutMapping("/auxilio-creche-baba")
+    public ResponseEntity<Eventos> auxilioCrecheBaba(@PathVariable Long funcionarioId, @RequestBody Eventos eventos) {
+        Eventos updatedEventos = eventosService.auxilioCrecheBaba(funcionarioId, eventos);
+        return ResponseEntity.ok(updatedEventos);
+    }
 }
