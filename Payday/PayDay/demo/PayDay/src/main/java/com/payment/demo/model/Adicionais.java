@@ -18,4 +18,7 @@ public class Adicionais {
     private float valeTransporte;
     private float valeAlimentacao;
     
+    public Adicionais() {
+        
+    }
 }
