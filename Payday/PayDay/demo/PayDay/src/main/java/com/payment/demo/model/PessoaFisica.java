@@ -1,12 +1,15 @@
 package com.payment.demo.model;
 
-import java.time.LocalDate;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@SuperBuilder
 public class PessoaFisica extends Pessoa {
   
     private String sexo;
@@ -14,16 +17,10 @@ public class PessoaFisica extends Pessoa {
     private String nomeDoPai;
     private String nomeDaMae;
     private String raca;
+    private boolean ativoInativo;
 
-    public PessoaFisica(String nome, String documento, String endereco, String telefone, String email,
-            LocalDate dataDeNascimento, String sexo, String grauDeInstrucao, String nomeDoPai, String nomeDaMae,
-            String raca) {
-        super(nome, documento, endereco, telefone, email, dataDeNascimento);
-        this.sexo = sexo;
-        this.grauDeInstrucao = grauDeInstrucao;
-        this.nomeDoPai = nomeDoPai;
-        this.nomeDaMae = nomeDaMae;
-        this.raca = raca;
+    public PessoaFisica(){
+
     }
   
     

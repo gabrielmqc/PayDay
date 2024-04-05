@@ -11,7 +11,6 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @AllArgsConstructor
 @SuperBuilder
-
 public abstract class Pessoa {
 
     private String nome;
@@ -20,5 +19,9 @@ public abstract class Pessoa {
     private String telefone;
     private String email;
     private LocalDate dataDeNascimento;
+
+    public Pessoa(){
+
+    }
 
 }
