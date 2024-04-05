@@ -69,7 +69,7 @@ public class Eventos {
         }
     }
 
-    public float auxilioCrecheBaba(LocalDate dataDeNascimento, int quantidadeDependentes) {
+    public void auxilioCrecheBaba(LocalDate dataDeNascimento, int quantidadeDependentes) {
         float valorPorDependente = 400;
         LocalDate dataAtual = LocalDate.now();
         Period periodo = Period.between(dataDeNascimento, dataAtual);
@@ -77,6 +77,5 @@ public class Eventos {
         if(idade < 6) {
             this.auxilioCrecheBaba += valorPorDependente * quantidadeDependentes;
         }
-        return auxilioCrecheBaba;
     }
 }
