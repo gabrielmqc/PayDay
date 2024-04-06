@@ -13,7 +13,9 @@ public class Adicionais {
     private float insalubridade;
     private float periculosidade;
     private float adicionalNoturno;
-    private float gratificacao;
+    private float chefe;
+    private float diretor;
+    private float pregoeiro;
     private float tempoDeEmpresa;
     private float valeTransporte;
     private float valeAlimentacao;
