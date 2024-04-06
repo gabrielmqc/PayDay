@@ -12,15 +12,21 @@ public class EventosService {
 
     private Eventos eventos;
 
-    public void adicionarHoraExtra50(float nivelSalarial) {
+    public void adicionarHoraExtra50(float nivelSalarial, float quantiaEventos) {
         float horaExtra = eventos.getHoraExtra50();
-        horaExtra += nivelSalarial / 20;
+        float valorHora = 0;
+
+        valorHora += nivelSalarial /220 *1.5;
+        horaExtra = valorHora * quantiaEventos;
         eventos.setHoraExtra50(horaExtra);
     }
 
-    public void adicionarHoraExtra100(float nivelSalarial) {
+    public void adicionarHoraExtra100(float nivelSalarial, float quantiaEventos) {
         float horaExtra = eventos.getHoraExtra100();
-        horaExtra += nivelSalarial / 10;
+        float valorHora = 0;
+        valorHora += nivelSalarial / 220 * 2;
+        horaExtra = valorHora * quantiaEventos;
+        
         eventos.setHoraExtra100(horaExtra);
     }
 

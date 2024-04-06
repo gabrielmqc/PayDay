@@ -15,6 +15,7 @@ public class FuncionarioService {
         // Inicialize as instâncias necessárias, por exemplo:
         this.funcionario = new Funcionario();
         this.dependente = new Dependente();
+        this.eventos = new EventosService();
     }
 
     public void salarioLiquido() {
@@ -24,10 +25,10 @@ public class FuncionarioService {
     public void executarEvento(String tipoEvento) {
         switch (tipoEvento) {
             case "HoraExtra50":
-                eventos.adicionarHoraExtra50(funcionario.getNivelSalarial());
+                eventos.adicionarHoraExtra50(funcionario.getNivelSalarial(), funcionario.getQuantiaEventos());
                 break;
             case "HoraExtra100":
-                eventos.adicionarHoraExtra100(funcionario.getNivelSalarial());
+                eventos.adicionarHoraExtra100(funcionario.getNivelSalarial(), funcionario.getQuantiaEventos());
                 break;
             case "SubtrairFaltas":
                 eventos.subtrairFaltas(funcionario.getNivelSalarial(), funcionario.getQuantiaEventos());

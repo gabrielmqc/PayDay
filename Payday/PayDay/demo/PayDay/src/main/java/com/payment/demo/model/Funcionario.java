@@ -1,6 +1,8 @@
 package com.payment.demo.model;
 
 
+import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +21,7 @@ public class Funcionario extends PessoaFisica {
     private float nivelSalarial;
     private float quantiaEventos;
     private String tipoEvento;
+    private LocalDate dataDeContratacao;
     private Adicionais adicionais;
     private Eventos eventos;
     private Dependente dependente;
