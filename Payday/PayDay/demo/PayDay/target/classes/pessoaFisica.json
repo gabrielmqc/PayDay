@@ -1,0 +1,14 @@
+{
+    "nome": "Fulano de Tal",
+    "documento": "123456789",
+    "endereco": "Rua Principal, 123",
+    "telefone": "(00) 1234-5678",
+    "email": "fulano@example.com",
+    "dataDeNascimento": "1990-01-01",
+    "sexo": "Masculino",
+    "grauDeInstrucao": "Superior Completo",
+    "nomeDoPai": "Beltrano de Tal",
+    "nomeDaMae": "Cicrana de Tal",
+    "raca": "Branca",
+    "ativoInativo": true
+  }

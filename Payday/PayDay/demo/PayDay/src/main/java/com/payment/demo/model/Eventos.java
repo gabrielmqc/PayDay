@@ -9,15 +9,25 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class Eventos {
-    private float horaExtra50;
-    private float horaExtra100;
-    private float faltas;
-    private float atraso;
-    private float descansoSemanalRemunerado;
-    private float adicionalNoturno;
-    private float salarioFamilia;
-    private float diariaViagem;
-    private float auxilioCrecheBaba;
+
+    private String sHoraExtra50;
+    private Float horaExtra50;
+    private String sHoraExtra100;
+    private Float horaExtra100;
+    private String sFaltas;
+    private Float faltas;
+    private String sAtraso;
+    private Float atraso;
+    private String sDescansoSemanalRemunerado;
+    private Float descansoSemanalRemunerado;
+    private String sAdicionalNoturno;
+    private Float adicionalNoturno;
+    private String sSalarioFamilia;
+    private Float salarioFamilia;
+    private String sDiariaViagem;
+    private Float diariaViagem;
+    private String sAuxilioCrecheBaba;
+    private Float auxilioCrecheBaba;
 
     public Eventos() {
         // Construtor vazio necessário para Lombok

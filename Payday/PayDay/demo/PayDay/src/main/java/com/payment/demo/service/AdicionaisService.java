@@ -6,19 +6,15 @@ import java.time.Period;
 import org.springframework.stereotype.Service;
 
 import com.payment.demo.model.Adicionais;
-import com.payment.demo.model.Funcionario;
 
 @Service
 public class AdicionaisService {
 
     private Adicionais adicionais;
-    private FuncionarioService funcionarioService;
-    private Funcionario funcionario;
 
     public AdicionaisService() {
         this.adicionais = new Adicionais();
-        this.funcionario = new Funcionario();
-        this.funcionarioService = new FuncionarioService();
+
     }
     /*
      * insalubridade;

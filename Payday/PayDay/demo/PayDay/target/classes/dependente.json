@@ -1,0 +1,12 @@
+{
+    "insalubridade": 100.0,
+    "periculosidade": 50.0,
+    "adicionalNoturno": 20.0,
+    "chefe": 200.0,
+    "diretor": 500.0,
+    "pregoeiro": 150.0,
+    "tempoDeEmpresa": 300.0,
+    "valeTransporte": 150.0,
+    "valeAlimentacao": 200.0
+  }
+  
