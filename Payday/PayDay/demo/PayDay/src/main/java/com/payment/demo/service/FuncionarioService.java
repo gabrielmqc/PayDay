@@ -60,7 +60,7 @@ public class FuncionarioService {
         funcionario.setSalarioLiquido(salarioLiquido);
     }
 
-    public void executarEvento(Funcionario funcionario, Dependente dependente) {
+    /*public void executarEvento(Funcionario funcionario, Dependente dependente) {
         // Verifica se o objeto de eventos do funcionário não é nulo
         if (funcionario.getEventos() != null) {
             // Obtém o objeto de eventos do funcionário
@@ -99,6 +99,6 @@ public class FuncionarioService {
         } else {
             System.out.println("O objeto de eventos do funcionário está nulo.");
         }
-    }
+    }*/
 
 }
