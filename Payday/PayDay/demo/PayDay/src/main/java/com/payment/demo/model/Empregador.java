@@ -11,21 +11,27 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @AllArgsConstructor
-@SuperBuilder
 @Entity
 @Data
 @Table(name = "tb_empregador")
-public class Empregador extends Pessoa {
+public class Empregador {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) 
     private long id;
+
+    private String nome;
+    private String documento;
+    private String endereco;
+    private String telefone;
+    private String email;
+    private LocalDate dataCriacao;
     private String inscricaoEstadual;
     private String inscricaoMunicipal;
+
 
 }
