@@ -5,10 +5,9 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
+import com.payment.demo.model.Dependente;
 import com.payment.demo.model.Funcionario;
 import com.payment.demo.model.PessoaFisica;
 
@@ -21,25 +20,22 @@ public class FuncionarioService {
 
     @Autowired
     private EventosService eventosService;
-    private PessoaFisica pessoaFisica;
-    private LeitorJSON leitorJSON;
+    private AdicionaisService adicionaisService;
+
     String jsonFuncionario = "{resources/funcionario.json}";
 
     public List<Funcionario> carregarFuncionarios() {
 
         JsonObject jsonObject = new JsonObject();
 
-        jsonObject.addProperty("nome", "João Silva");
-        jsonObject.addProperty("cargo", "Desenvolvedor");
-        jsonObject.addProperty("idade", 30);
-        jsonObject.addProperty("salario", 5000.00);
-
         System.out.println(jsonObject);
         List<Funcionario> clientList = null;
         try {
             Gson gson = new Gson();
-            FileReader reader = new FileReader("C:\\Users\\gabri\\OneDrive\\Área de Trabalho\\Nova pasta\\PayDay\\Payday\\PayDay\\demo\\PayDay\\funcionario.json");
-            clientList = gson.fromJson(reader, new TypeToken<List<Funcionario>>(){}.getType());
+            FileReader reader = new FileReader(
+                    "C:\\Users\\gabri\\OneDrive\\Área de Trabalho\\Nova pasta\\PayDay\\Payday\\PayDay\\demo\\PayDay\\src\\main\\resources\\funcionario.json");
+            clientList = gson.fromJson(reader, new TypeToken<List<Funcionario>>() {
+            }.getType());
 
             reader.close();
         } catch (IOException e) {
@@ -49,81 +45,112 @@ public class FuncionarioService {
 
     }
 
-    public void calcularSalarioLiquido(Funcionario funcionario, PessoaFisica pessoaFisica) {
-        // Resetar o valor total dos eventos antes de calcular
-        eventosService.resetarValorTotalEventos();
-
-        // Executar eventos para o funcionário
-        eventosService.adicionarHoraExtra50(funcionario.getNivelSalarial(), funcionario.getQuantiaHoraExtra50());
-        eventosService.adicionarHoraExtra100(funcionario.getNivelSalarial(), funcionario.getQuantiaHoraExtra100());
-        eventosService.subtrairFaltas(funcionario.getNivelSalarial(), funcionario.getQuantiaFaltas());
-        eventosService.descontoPorAtraso(funcionario.getNivelSalarial(), funcionario.getQuantiaDescontoPorAtraso());
-        eventosService.descansoSemanalRemunerado(funcionario.getNivelSalarial(),
-                funcionario.getQuantiaDescansoSemanalRemunerado());
-        eventosService.adicionalNoturno(funcionario.getNivelSalarial(), funcionario.getQuantiaAdicionalNoturno());
-        eventosService.salarioFamilia(funcionario.getNivelSalarial(), funcionario.getQuantidadeDependentes());
-        eventosService.diariaViagem(funcionario.getNivelSalarial(), funcionario.getQuantiaDiariaViagem());
-
-        // eventosService.auxilioCrecheBaba(pessoaFisica.getDataDeNascimento(), funcionario.getQuantidadeDependentes());
-
-        // Obter o valor total dos eventos
-        Float valorTotalEventos = eventosService.getValorTotalEventos();
-
-        // Calcular o salário líquido
-        Float salarioLiquido = funcionario.getNivelSalarial() + valorTotalEventos;
-
-        // Salvar o salário líquido no funcionário
-        funcionario.setSalarioLiquido(salarioLiquido);
+    public void executarEvento(Funcionario funcionario, Dependente dependente) {
+        // Verifica e executa cada tipo de evento, se estiver presente
+        if (funcionario.getQuantiaHoraExtra50() != null) {
+            eventosService.adicionarHoraExtra50(funcionario.getNivelSalarial(), funcionario.getQuantiaHoraExtra50());
+        }
+        if (funcionario.getQuantiaHoraExtra100() != null) {
+            eventosService.adicionarHoraExtra100(funcionario.getNivelSalarial(), funcionario.getQuantiaHoraExtra100());
+        }
+        if (funcionario.getQuantiaFaltas() != null) {
+            eventosService.subtrairFaltas(funcionario.getNivelSalarial(), funcionario.getQuantiaFaltas());
+        }
+        if (funcionario.getQuantiaDescontoPorAtraso() != null) {
+            eventosService.descontoPorAtraso(funcionario.getNivelSalarial(), funcionario.getQuantiaDescontoPorAtraso());
+        }
+        if (funcionario.getQuantiaDescansoSemanalRemunerado() != null) {
+            eventosService.descansoSemanalRemunerado(funcionario.getNivelSalarial(),
+                    funcionario.getQuantiaDescansoSemanalRemunerado());
+        }
+        if (funcionario.getQuantiaAdicionalNoturno() != null) {
+            eventosService.adicionalNoturno(funcionario.getNivelSalarial(), funcionario.getQuantiaAdicionalNoturno());
+        }
+        // if (funcionario.getSalarioFamilia() != null) {
+        // funcionarioService.salarioFamilia(funcionario.getNivelSalarial(),
+        // funcionario.getQuantidadeDependentes());
+        // }
+        if (funcionario.getQuantiaDiariaViagem() != null) {
+            eventosService.diariaViagem(funcionario.getNivelSalarial(), funcionario.getQuantiaDiariaViagem());
+        }
+        if (funcionario.getQuantiaAuxilioCrecheBaba() != null) {
+            eventosService.auxilioCrecheBaba(dependente.getDataDeNascimento(), funcionario.getQuantidadeDependentes());
+        }
     }
 
-    /*
-     * public void executarEvento(Funcionario funcionario, Dependente dependente) {
-     * // Verifica se o objeto de eventos do funcionário não é nulo
-     * if (funcionario.getEventos() != null) {
-     * // Obtém o objeto de eventos do funcionário
-     * Eventos eventos = funcionario.getEventos();
-     * 
-     * // Verifica e executa cada tipo de evento, se estiver presente
-     * if (eventos.getHoraExtra50() != null) {
-     * eventosService.adicionarHoraExtra50(funcionario.getNivelSalarial(),
-     * eventos.getHoraExtra50());
-     * }
-     * if (eventos.getHoraExtra100() != null) {
-     * eventosService.adicionarHoraExtra100(funcionario.getNivelSalarial(),
-     * eventos.getHoraExtra100());
-     * }
-     * if (eventos.getFaltas() != null) {
-     * eventosService.subtrairFaltas(funcionario.getNivelSalarial(),
-     * eventos.getFaltas());
-     * }
-     * if (eventos.getAtraso() != null) {
-     * eventosService.descontoPorAtraso(funcionario.getNivelSalarial(),
-     * eventos.getAtraso());
-     * }
-     * if (eventos.getDescansoSemanalRemunerado() != null) {
-     * eventosService.descansoSemanalRemunerado(funcionario.getNivelSalarial(),
-     * eventos.getDescansoSemanalRemunerado());
-     * }
-     * if (eventos.getAdicionalNoturno() != null) {
-     * eventosService.adicionalNoturno(funcionario.getNivelSalarial(),
-     * eventos.getAdicionalNoturno());
-     * }
-     * if (eventos.getSalarioFamilia() != null) {
-     * eventosService.salarioFamilia(funcionario.getNivelSalarial(),
-     * funcionario.getQuantidadeDependentes());
-     * }
-     * if (eventos.getDiariaViagem() != null) {
-     * eventosService.diariaViagem(funcionario.getNivelSalarial(),
-     * eventos.getDiariaViagem());
-     * }
-     * if (eventos.getAuxilioCrecheBaba() != null) {
-     * eventosService.auxilioCrecheBaba(dependente.getDataDeNascimento(),
-     * funcionario.getQuantidadeDependentes());
-     * }
-     * } else {
-     * System.out.println("O objeto de eventos do funcionário está nulo.");
-     * }
-     * }
-     */
+    public void executarAdicionais(Funcionario funcionario) {
+        
+        if (funcionario.getAdicionais().getInsalubridade() != null) {
+            adicionaisService.adicionarInsalubridade(funcionario.getNivelSalarial());
+        }
+        if (funcionario.getAdicionais().getPericulosidade() != null) {  
+            adicionaisService.adicionarPericulosidade(funcionario.getNivelSalarial());
+        }
+        if (funcionario.getAdicionais().getAdicionalNoturno() != null) {
+            adicionaisService.adicionarNoturno(funcionario.getNivelSalarial());
+        }
+        if (funcionario.getAdicionais().getChefe() != null) {
+            adicionaisService.adicionarGratificacaoChefe(funcionario.getNivelSalarial());
+        }
+        if (funcionario.getAdicionais().getDiretor() != null) {
+            adicionaisService.adicionarGratificacaoDiretor(funcionario.getNivelSalarial());
+        }
+        if (funcionario.getAdicionais().getPregoeiro() != null) {
+            adicionaisService.adicionarGratificacaoPregoeiro(funcionario.getNivelSalarial());
+        }
+        if (funcionario.getAdicionais().getTempoDeEmpresa() != null) {
+            adicionaisService.adicionarTempoDeEmpresa(funcionario.getNivelSalarial(), funcionario.getDataDeContratacao());
+        }
+    }
+
+    public static float calcularINSS(float salarioBruto) {
+        float inss;
+        if (salarioBruto <= 1100) {
+            inss = salarioBruto * 0.075f;
+        } else if (salarioBruto <= 2203.48) {
+            inss = salarioBruto * 0.09f;
+        } else if (salarioBruto <= 3305.22) {
+            inss = salarioBruto * 0.12f;
+        } else if (salarioBruto <= 6433.57) {
+            inss = salarioBruto * 0.14f;
+        } else {
+            inss = 6433.57f * 0.14f;
+        }
+        return inss;
+    }
+
+    public static float calcularFGTS(float salarioBruto) {
+        return salarioBruto * 0.08f;
+    }
+
+    public static float calcularIRRF(float salarioBruto) {
+        float inss = calcularINSS(salarioBruto);
+        float salarioBase = salarioBruto - inss;
+        float irrf;
+        if (salarioBase <= 1903.98) {
+            irrf = 0;
+        } else if (salarioBase <= 2826.65) {
+            irrf = salarioBase * 0.075f - 142.8f;
+        } else if (salarioBase <= 3751.05) {
+            irrf = salarioBase * 0.15f - 354.8f;
+        } else if (salarioBase <= 4664.68) {
+            irrf = salarioBase * 0.225f - 636.13f;
+        } else {
+            irrf = salarioBase * 0.275f - 869.36f;
+        }
+        return irrf;
+    }
+
+    public void calcularSalarioLiquido(Funcionario funcionario, PessoaFisica pessoaFisica, Dependente dependente) {
+
+        float salarioBruto = funcionario.getNivelSalarial();
+        float eventos = eventosService.getValorTotalEventos();
+        float inss = calcularINSS(salarioBruto);
+        float fgts = calcularFGTS(salarioBruto);
+        float irrf = calcularIRRF(salarioBruto);
+        float salarioLiquido = salarioBruto + eventos - inss - fgts - irrf;
+
+        funcionario.setSalarioLiquido(salarioLiquido);
+    }
 
 }

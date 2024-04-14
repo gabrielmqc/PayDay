@@ -58,9 +58,10 @@ public class EventosService {
         }
     }
 
-    public void auxilioCrecheBaba(LocalDate dataDeNascimento, int quantidadeDependentes) {
+    public void auxilioCrecheBaba(String dataDeNascimento, int quantidadeDependentes) {
+        LocalDate dataNascimento = LocalDate.parse(dataDeNascimento);
         LocalDate dataAtual = LocalDate.now();
-        Period periodo = Period.between(dataDeNascimento, dataAtual);
+        Period periodo = Period.between(dataNascimento, dataAtual);
         int idade = periodo.getYears();
         if (idade < 6) {
             Float valorPorDependente = 400f;

@@ -1,5 +1,5 @@
 [
-{
+  {
     "nome": "João Silva",
     "documento": "123.456.789-00",
     "endereco": "Rua das Flores, 123",
@@ -17,16 +17,27 @@
     "jornadaDeTrabalho": "Segunda a Sexta, 8h às 18h",
     "categoria": "CLT",
     "nivelSalarial": 5000.00,
-    "salarioLiquido": 4500.00,
-    "quantiaHoraExtra50": 10.0,
-    "quantiaHoraExtra100": 5.0,
-    "quantiaFaltas": 2.0,
+    "salarioLiquido": 0.0,
+    "quantiaHoraExtra50": 0.0,
+    "quantiaHoraExtra100": 0.0,
+    "quantiaFaltas": 0,
     "quantiaDescontoPorAtraso": 1.5,
     "quantiaDescansoSemanalRemunerado": 1.0,
     "quantiaAdicionalNoturno": 3.0,
     "quantidadeDependentes": 2,
     "quantiaDiariaViagem": 100.0,
     "quantiaAuxilioCrecheBaba": 400.0,
-    "dataDeContratacao": "2023-01-15"
+    "dataDeContratacao": "2023-01-15",
+    "adicionais": {
+      "insalubridade": null,
+      "periculosidade": 0,
+      "adicionalNoturno": 0,
+      "chefe": 0,
+      "diretor": 0,
+      "pregoeiro": 0,
+      "tempoDeEmpresa": 0,
+      "valeTransporte":0,
+      "valeAlimentacao": 0
+    }
   }
 ]

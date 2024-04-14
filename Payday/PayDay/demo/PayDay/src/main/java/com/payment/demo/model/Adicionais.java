@@ -10,15 +10,15 @@ import lombok.Setter;
 
 public class Adicionais {
   
-    private float insalubridade;
-    private float periculosidade;
-    private float adicionalNoturno;
-    private float chefe;
-    private float diretor;
-    private float pregoeiro;
-    private float tempoDeEmpresa;
-    private float valeTransporte;
-    private float valeAlimentacao;
+    private Float insalubridade;
+    private Float periculosidade;
+    private Float adicionalNoturno;
+    private Float chefe;
+    private Float diretor;
+    private Float pregoeiro;
+    private Float tempoDeEmpresa;
+    private Float valeTransporte;
+    private Float valeAlimentacao;
     
     public Adicionais() {
         
