@@ -1,5 +1,6 @@
 package com.payment.demo.model;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,15 +19,8 @@ public class Funcionario extends PessoaFisica {
     private String categoria;
     private Float nivelSalarial;
     private Float salarioLiquido;
-    private Float quantiaHoraExtra50;
-    private Float quantiaHoraExtra100;
-    private Float quantiaFaltas;
-    private Float quantiaDescontoPorAtraso;
-    private Float quantiaDescansoSemanalRemunerado;
-    private Float quantiaAdicionalNoturno;
+    private Eventos eventos;
     private int quantidadeDependentes;
-    private Float quantiaDiariaViagem;
-    private Float quantiaAuxilioCrecheBaba;
     private String dataDeContratacao;
     private Adicionais adicionais;
     

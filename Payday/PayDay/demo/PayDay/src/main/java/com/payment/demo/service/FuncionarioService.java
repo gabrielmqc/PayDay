@@ -3,6 +3,7 @@ package com.payment.demo.service;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class FuncionarioService {
     @Autowired
     private EventosService eventosService;
     private AdicionaisService adicionaisService;
+    private List<Funcionario> funcionarios;
 
     String jsonFuncionario = "{resources/funcionario.json}";
 
@@ -45,35 +47,41 @@ public class FuncionarioService {
 
     }
 
+    public Optional<Funcionario> buscarPorCPF(String cpf) {
+        return funcionarios.stream()
+                .filter(funcionario -> funcionario.getDocumento().equals(cpf))
+                .findFirst();
+    }
+
     public void executarEvento(Funcionario funcionario, Dependente dependente) {
         // Verifica e executa cada tipo de evento, se estiver presente
-        if (funcionario.getQuantiaHoraExtra50() != null) {
-            eventosService.adicionarHoraExtra50(funcionario.getNivelSalarial(), funcionario.getQuantiaHoraExtra50());
+        if (funcionario.getEventos().getHoraExtra50() != null) {
+            eventosService.adicionarHoraExtra50(funcionario.getNivelSalarial(), funcionario.getEventos().getHoraExtra50());
         }
-        if (funcionario.getQuantiaHoraExtra100() != null) {
-            eventosService.adicionarHoraExtra100(funcionario.getNivelSalarial(), funcionario.getQuantiaHoraExtra100());
+        if (funcionario.getEventos().getHoraExtra100() != null) {
+            eventosService.adicionarHoraExtra100(funcionario.getNivelSalarial(), funcionario.getEventos().getHoraExtra100());
         }
-        if (funcionario.getQuantiaFaltas() != null) {
-            eventosService.subtrairFaltas(funcionario.getNivelSalarial(), funcionario.getQuantiaFaltas());
+        if (funcionario.getEventos().getFaltas() != null) {
+            eventosService.subtrairFaltas(funcionario.getNivelSalarial(), funcionario.getEventos().getFaltas());
         }
-        if (funcionario.getQuantiaDescontoPorAtraso() != null) {
-            eventosService.descontoPorAtraso(funcionario.getNivelSalarial(), funcionario.getQuantiaDescontoPorAtraso());
+        if (funcionario.getEventos().getAtraso() != null) {
+            eventosService.descontoPorAtraso(funcionario.getNivelSalarial(), funcionario.getEventos().getAtraso());
         }
-        if (funcionario.getQuantiaDescansoSemanalRemunerado() != null) {
+        if (funcionario.getEventos().getDescansoSemanalRemunerado() != null) {
             eventosService.descansoSemanalRemunerado(funcionario.getNivelSalarial(),
-                    funcionario.getQuantiaDescansoSemanalRemunerado());
+                    funcionario.getEventos().getDescansoSemanalRemunerado());
         }
-        if (funcionario.getQuantiaAdicionalNoturno() != null) {
-            eventosService.adicionalNoturno(funcionario.getNivelSalarial(), funcionario.getQuantiaAdicionalNoturno());
+        if (funcionario.getEventos().getAdicionalNoturno() != null) {
+            eventosService.adicionalNoturno(funcionario.getNivelSalarial(), funcionario.getEventos().getAdicionalNoturno());
         }
         // if (funcionario.getSalarioFamilia() != null) {
         // funcionarioService.salarioFamilia(funcionario.getNivelSalarial(),
         // funcionario.getQuantidadeDependentes());
         // }
-        if (funcionario.getQuantiaDiariaViagem() != null) {
-            eventosService.diariaViagem(funcionario.getNivelSalarial(), funcionario.getQuantiaDiariaViagem());
+        if (funcionario.getEventos().getDiariaViagem() != null) {
+            eventosService.diariaViagem(funcionario.getNivelSalarial(), funcionario.getEventos().getDiariaViagem());
         }
-        if (funcionario.getQuantiaAuxilioCrecheBaba() != null) {
+        if (funcionario.getEventos().getAuxilioCrecheBaba() != null) {
             eventosService.auxilioCrecheBaba(dependente.getDataDeNascimento(), funcionario.getQuantidadeDependentes());
         }
     }
