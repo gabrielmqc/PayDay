@@ -1,6 +1,8 @@
 package com.payment.demo.model;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
+@JsonDeserialize
 public class Eventos {
 
     private Float horaExtra50;

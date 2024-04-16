@@ -18,8 +18,7 @@ public class Dependente {
     private String telefone;
     private String email;
     private String dataDeNascimento;
-    private String tipo;
-
+    private String grauDeParentesco;
 
     public Dependente(){
 

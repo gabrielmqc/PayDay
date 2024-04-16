@@ -3,12 +3,11 @@ package com.payment.demo.service;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.payment.demo.model.Dependente;
+import com.payment.demo.model.Eventos;
 import com.payment.demo.model.Funcionario;
 import com.payment.demo.model.PessoaFisica;
 
@@ -22,9 +21,14 @@ public class FuncionarioService {
     @Autowired
     private EventosService eventosService;
     private AdicionaisService adicionaisService;
-    private List<Funcionario> funcionarios;
 
     String jsonFuncionario = "{resources/funcionario.json}";
+
+    private List<Funcionario> funcionarios;
+
+    public FuncionarioService() {
+        funcionarios = carregarFuncionarios();
+    }
 
     public List<Funcionario> carregarFuncionarios() {
 
@@ -47,19 +51,98 @@ public class FuncionarioService {
 
     }
 
-    public Optional<Funcionario> buscarPorCPF(String cpf) {
-        return funcionarios.stream()
-                .filter(funcionario -> funcionario.getDocumento().equals(cpf))
-                .findFirst();
+    public Funcionario buscarPorDocumento(String documento) {
+
+        List<Funcionario> funcionarios = carregarFuncionarios();
+
+        for (Funcionario f : funcionarios) {
+            if (f.getDocumento().equals(documento)) {
+                return f;
+            }
+        }
+
+        return null;
+
     }
 
-    public void executarEvento(Funcionario funcionario, Dependente dependente) {
+    public Funcionario atualizar(Funcionario func) {
+    
+        Funcionario encontrado = buscarPorDocumento(func.getDocumento());
+    
+        if(encontrado != null) {
+          encontrado.getEventos().setHoraExtra100(func.getEventos().getHoraExtra100()); 
+          encontrado.setDocumento(func.getDocumento());
+          encontrado.setCargo(func.getCargo());
+        }
+        return encontrado;
+    }
+
+    private Funcionario getByCPF(String cpf) {
+        // busca na lista
+        for(Funcionario f : funcionarios) {
+          if(f.getDocumento().equals(cpf)) {
+            return f;
+          } 
+        }
+        return null;
+      }
+
+    public Funcionario atualizarEventos(String documento, Eventos novosEventos) {
+
+        // Busca lista de funcionários
+        Funcionario funcionario = getByCPF(documento);
+
+
+        // Verifica se encontrou
+        if (funcionario == null) {
+            return null;
+        }
+
+        // Atualiza os eventos
+        if (novosEventos.getHoraExtra50() != null) {
+            funcionario.getEventos().setHoraExtra50(novosEventos.getHoraExtra50());
+        }
+
+        if (novosEventos.getHoraExtra100() != null) {
+            funcionario.getEventos().setHoraExtra100(novosEventos.getHoraExtra100());
+        }
+
+        if (novosEventos.getFaltas() != null) {
+            funcionario.getEventos().setFaltas(novosEventos.getFaltas());
+        }
+
+        if (novosEventos.getAtraso() != null) {
+            funcionario.getEventos().setAtraso(novosEventos.getAtraso());
+        }
+
+        if (novosEventos.getDescansoSemanalRemunerado() != null) {
+            funcionario.getEventos().setDescansoSemanalRemunerado(novosEventos.getDescansoSemanalRemunerado());
+        }
+
+        if (novosEventos.getAdicionalNoturno() != null) {
+            funcionario.getEventos().setAdicionalNoturno(novosEventos.getAdicionalNoturno());
+        }
+
+        // Atualiza outros eventos
+
+        // Obtém index e atualiza na lista
+        int index = funcionarios.indexOf(funcionario);
+        funcionarios.set(index, funcionario);
+
+        return funcionario;
+
+    }
+
+
+    public void executarEventos(Funcionario funcionario) {
         // Verifica e executa cada tipo de evento, se estiver presente
         if (funcionario.getEventos().getHoraExtra50() != null) {
-            eventosService.adicionarHoraExtra50(funcionario.getNivelSalarial(), funcionario.getEventos().getHoraExtra50());
+            eventosService.adicionarHoraExtra50(funcionario.getNivelSalarial(),
+                    funcionario.getEventos().getHoraExtra50());
         }
         if (funcionario.getEventos().getHoraExtra100() != null) {
-            eventosService.adicionarHoraExtra100(funcionario.getNivelSalarial(), funcionario.getEventos().getHoraExtra100());
+            eventosService.adicionarHoraExtra100(funcionario.getNivelSalarial(),
+                    funcionario.getEventos().getHoraExtra100());
         }
         if (funcionario.getEventos().getFaltas() != null) {
             eventosService.subtrairFaltas(funcionario.getNivelSalarial(), funcionario.getEventos().getFaltas());
@@ -72,7 +155,8 @@ public class FuncionarioService {
                     funcionario.getEventos().getDescansoSemanalRemunerado());
         }
         if (funcionario.getEventos().getAdicionalNoturno() != null) {
-            eventosService.adicionalNoturno(funcionario.getNivelSalarial(), funcionario.getEventos().getAdicionalNoturno());
+            eventosService.adicionalNoturno(funcionario.getNivelSalarial(),
+                    funcionario.getEventos().getAdicionalNoturno());
         }
         // if (funcionario.getSalarioFamilia() != null) {
         // funcionarioService.salarioFamilia(funcionario.getNivelSalarial(),
@@ -82,16 +166,17 @@ public class FuncionarioService {
             eventosService.diariaViagem(funcionario.getNivelSalarial(), funcionario.getEventos().getDiariaViagem());
         }
         if (funcionario.getEventos().getAuxilioCrecheBaba() != null) {
-            eventosService.auxilioCrecheBaba(dependente.getDataDeNascimento(), funcionario.getQuantidadeDependentes());
+            eventosService.auxilioCrecheBaba(funcionario.getDependente().getDataDeNascimento(),
+                    funcionario.getQuantidadeDependentes());
         }
     }
 
     public void executarAdicionais(Funcionario funcionario) {
-        
+
         if (funcionario.getAdicionais().getInsalubridade() != null) {
             adicionaisService.adicionarInsalubridade(funcionario.getNivelSalarial());
         }
-        if (funcionario.getAdicionais().getPericulosidade() != null) {  
+        if (funcionario.getAdicionais().getPericulosidade() != null) {
             adicionaisService.adicionarPericulosidade(funcionario.getNivelSalarial());
         }
         if (funcionario.getAdicionais().getAdicionalNoturno() != null) {
@@ -107,7 +192,8 @@ public class FuncionarioService {
             adicionaisService.adicionarGratificacaoPregoeiro(funcionario.getNivelSalarial());
         }
         if (funcionario.getAdicionais().getTempoDeEmpresa() != null) {
-            adicionaisService.adicionarTempoDeEmpresa(funcionario.getNivelSalarial(), funcionario.getDataDeContratacao());
+            adicionaisService.adicionarTempoDeEmpresa(funcionario.getNivelSalarial(),
+                    funcionario.getDataDeContratacao());
         }
     }
 
@@ -149,16 +235,34 @@ public class FuncionarioService {
         return irrf;
     }
 
-    public void calcularSalarioLiquido(Funcionario funcionario, PessoaFisica pessoaFisica, Dependente dependente) {
+    public void calcularSalarioLiquido(Funcionario funcionario) {
 
-        float salarioBruto = funcionario.getNivelSalarial();
-        float eventos = eventosService.getValorTotalEventos();
-        float inss = calcularINSS(salarioBruto);
-        float fgts = calcularFGTS(salarioBruto);
-        float irrf = calcularIRRF(salarioBruto);
-        float salarioLiquido = salarioBruto + eventos - inss - fgts - irrf;
+        // Chama cálculo de eventos
+        executarEventos(funcionario);
 
+        // Chama cálculo de adicionais
+        executarAdicionais(funcionario);
+
+        // Obtém salário base
+        Float salarioBase = funcionario.getNivelSalarial();
+
+        // Soma valores de eventos e adicionais
+        Float eventos = eventosService.getValorTotalEventos();
+        Float adicionais = adicionaisService.getValorTotalAdicionais();
+
+        Float salarioBruto = salarioBase + eventos + adicionais;
+
+        // Calcula descontos
+        Float inss = calcularINSS(salarioBruto);
+        Float irrf = calcularIRRF(salarioBruto);
+        Float fgts = calcularFGTS(salarioBruto);
+
+        // Salário líquido
+        Float salarioLiquido = salarioBruto - inss - irrf - fgts;
+
+        // Set no funcionário
         funcionario.setSalarioLiquido(salarioLiquido);
+
     }
 
 }
