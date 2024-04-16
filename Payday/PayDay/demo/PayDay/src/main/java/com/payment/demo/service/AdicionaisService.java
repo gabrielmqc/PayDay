@@ -6,105 +6,98 @@ import java.time.Period;
 import org.springframework.stereotype.Service;
 
 import com.payment.demo.model.Adicionais;
+import com.payment.demo.model.Funcionario;
 
 @Service
 public class AdicionaisService {
 
-    private Adicionais adicionais;
+    private float valorTotalAdicionais = 0.0f;
 
-    public AdicionaisService() {
-        this.adicionais = new Adicionais();
+    public void calcularAdicionais(Funcionario funcionario) {
+        Adicionais adicionais = funcionario.getAdicionais();
 
+        if (adicionais != null) {
+            float nivelSalarial = funcionario.getNivelSalarial();
+            adicionarInsalubridade(adicionais.getInsalubridade(), nivelSalarial);
+            adicionarPericulosidade(adicionais.getPericulosidade(), nivelSalarial);
+            adicionarNoturno(adicionais.getAdicionalNoturno(), nivelSalarial);
+            adicionarGratificacaoChefe(adicionais.getChefe(), nivelSalarial);
+            adicionarGratificacaoDiretor(adicionais.getDiretor(), nivelSalarial);
+            adicionarGratificacaoPregoeiro(adicionais.getPregoeiro(), nivelSalarial);
+            adicionarTempoDeEmpresa(adicionais.getTempoDeEmpresa(), nivelSalarial, funcionario.getDataDeContratacao());
+            adicionarValeAlimentacao(nivelSalarial);
+            adicionarValeTransporte(nivelSalarial);
+        }
     }
 
-    private float valorTotalAdicioanais;
-   
-    public void adicionarInsalubridade(float nivelSalarial) {
-        float insalubridade = adicionais.getInsalubridade();
-
-        insalubridade += nivelSalarial * 0.15;
-
-        adicionais.setInsalubridade(insalubridade);
-        this.valorTotalAdicioanais += insalubridade;
+    public void adicionarInsalubridade(Float insalubridade, float nivelSalarial) {
+        if (insalubridade != null) {
+            float valorInsalubridade = nivelSalarial * 0.15f * insalubridade;
+            this.valorTotalAdicionais += valorInsalubridade;
+        }
     }
 
-    public void adicionarPericulosidade(float nivelSalarial) {
-        float periculosidade = adicionais.getPericulosidade();
-
-        periculosidade += nivelSalarial * 0.2;
-
-        adicionais.setPericulosidade(periculosidade);
-        this.valorTotalAdicioanais += periculosidade;
+    public void adicionarPericulosidade(Float periculosidade, float nivelSalarial) {
+        if (periculosidade != null) {
+            float valorPericulosidade = nivelSalarial * 0.2f * periculosidade;
+            this.valorTotalAdicionais += valorPericulosidade;
+        }
     }
 
-    public void adicionarNoturno(float nivelSalarial) {
-        float adicionalNoturno = adicionais.getAdicionalNoturno();
-
-        adicionalNoturno += nivelSalarial * 0.2;
-
-        adicionais.setAdicionalNoturno(adicionalNoturno);
-        this.valorTotalAdicioanais += adicionalNoturno;
+    public void adicionarNoturno(Float adicionalNoturno, float nivelSalarial) {
+        if (adicionalNoturno != null) {
+            float valorAdicionalNoturno = nivelSalarial * 0.2f * adicionalNoturno;
+            this.valorTotalAdicionais += valorAdicionalNoturno;
+        }
     }
 
-    public void adicionarGratificacaoChefe(float nivelSalarial) {
-        float chefe = adicionais.getChefe();
-
-        chefe += nivelSalarial * 0.50;
-
-        adicionais.setChefe(chefe);
-        this.valorTotalAdicioanais += chefe;
+    public void adicionarGratificacaoChefe(Float chefe, float nivelSalarial) {
+        if (chefe != null) {
+            float valorGratificacaoChefe = nivelSalarial * 0.50f * chefe;
+            this.valorTotalAdicionais += valorGratificacaoChefe;
+        }
     }
 
-    public void adicionarGratificacaoDiretor(float nivelSalarial) {
-        float diretor = adicionais.getDiretor();
-
-        diretor += nivelSalarial;
-
-        adicionais.setDiretor(diretor);
-        this.valorTotalAdicioanais += diretor;
-
+    public void adicionarGratificacaoDiretor(Float diretor, float nivelSalarial) {
+        if (diretor != null) {
+            float valorGratificacaoDiretor = nivelSalarial * diretor;
+            this.valorTotalAdicionais += valorGratificacaoDiretor;
+        }
     }
 
-    public void adicionarGratificacaoPregoeiro(float nivelSalarial) {
-        float pregoeiro = adicionais.getPregoeiro();
-
-        pregoeiro += nivelSalarial * 0.40;
-
-        adicionais.setPregoeiro(pregoeiro);
-        this.valorTotalAdicioanais += pregoeiro;
+    public void adicionarGratificacaoPregoeiro(Float pregoeiro, float nivelSalarial) {
+        if (pregoeiro != null) {
+            float valorGratificacaoPregoeiro = nivelSalarial * 0.40f * pregoeiro;
+            this.valorTotalAdicionais += valorGratificacaoPregoeiro;
+        }
     }
 
-    public void adicionarTempoDeEmpresa(float nivelSalarial, String dataDeContratacao) {
-        LocalDate dataContratacao = LocalDate.parse(dataDeContratacao);
-        float tempoDeEmpresa = adicionais.getTempoDeEmpresa();
-        LocalDate dataAtual = LocalDate.now();
-        Period periodo = Period.between(dataContratacao, dataAtual);
-        int anosDeServico = periodo.getYears();
-
-        tempoDeEmpresa += nivelSalarial * anosDeServico / 100;
-
-        adicionais.setTempoDeEmpresa(tempoDeEmpresa);
-        this.valorTotalAdicioanais += tempoDeEmpresa;
-
+    public void adicionarTempoDeEmpresa(Float tempoDeEmpresa, float nivelSalarial, String dataDeContratacao) {
+        if (tempoDeEmpresa != null) {
+            LocalDate dataContratacao = LocalDate.parse(dataDeContratacao);
+            LocalDate dataAtual = LocalDate.now();
+            Period periodo = Period.between(dataContratacao, dataAtual);
+            int anosDeServico = periodo.getYears();
+            float valorTempoDeEmpresa = nivelSalarial * anosDeServico / 100 * tempoDeEmpresa;
+            this.valorTotalAdicionais += valorTempoDeEmpresa;
+        }
     }
 
-    public void adicionarValeAlimentacao(float nivelSalarial){
-        float valeAlimentacao = 0;
-        valeAlimentacao += nivelSalarial * 0.1;
-        this.valorTotalAdicioanais -= valeAlimentacao;
+    public void adicionarValeAlimentacao(float nivelSalarial) {
+        float valorValeAlimentacao = nivelSalarial * 0.1f;
+        this.valorTotalAdicionais -= valorValeAlimentacao;
     }
 
     public void adicionarValeTransporte(float nivelSalarial) {
-        float valeTransporte = 0;
-        valeTransporte += nivelSalarial * 0.06;
-        this.valorTotalAdicioanais -= valeTransporte;
+        float valorValeTransporte = nivelSalarial * 0.06f;
+        this.valorTotalAdicionais = valorValeTransporte;
     }
 
-    public float getValorTotalAdicionais(){
-        return this.valorTotalAdicioanais;
+    public float getValorTotalAdicionais() {
+        return this.valorTotalAdicionais;
     }
 
-    public void resetarValorTotalAdicionais(){
-        this.valorTotalAdicioanais = 0.0f;
+    public void resetarValorTotalAdicionais() {
+        this.valorTotalAdicionais = 0.0f;
     }
 }

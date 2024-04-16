@@ -1,7 +1,7 @@
 package com.payment.demo.controller;
 
-import java.util.List;
-
+import java.io.File;
+import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,56 +9,55 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.payment.demo.model.Eventos;
 import com.payment.demo.model.Funcionario;
+import com.payment.demo.service.FuncionarioDataManager;
 import com.payment.demo.service.FuncionarioService;
+
 
 @RestController
 @RequestMapping("/funcionarios")
 public class FuncionarioController {
 
   @Autowired
+  private FuncionarioDataManager funcionarioDataManager;
+
+  @Autowired
   private FuncionarioService funcionarioService;
 
-  @ResponseBody
-  @GetMapping("/funcionarios")
-  public List<Funcionario> listar() {
-    List<Funcionario> funcionarios = funcionarioService.carregarFuncionarios();
-    System.err.println(funcionarios);
-    return funcionarios;
+  private ObjectMapper objectMapper = new ObjectMapper();
+
+  @GetMapping("/get")
+  public ResponseEntity<Object> getData() throws IOException {
+    Object data = objectMapper.readValue(new File(
+        "C:\\Users\\gabri\\OneDrive\\Área de Trabalho\\Nova pasta\\PayDay\\Payday\\PayDay\\demo\\PayDay\\src\\main\\resources\\funcionario.json"),
+        Object.class);
+    return ResponseEntity.ok(data);
   }
 
-  @GetMapping("/{documento}")
-  public ResponseEntity<Funcionario> buscarPorDocumento(@PathVariable String documento) {
+  @GetMapping("get/{nis}")
+  public ResponseEntity<Object> buscaPorNis(@PathVariable String nis) throws IOException{
+      Funcionario funcionario = funcionarioService.encontrarFuncionarioPorNIS(nis);
+      return ResponseEntity.ok(funcionario);
+  }
+  
+  @PutMapping("/update/{nis}")
+  public ResponseEntity<String> updateData(@PathVariable String nis, @RequestBody Eventos novosEventos) {
+    Funcionario funcionarioAtualizado = funcionarioDataManager.atualizarEventosDoFuncionario(nis, novosEventos);
 
-    Funcionario funcionario = funcionarioService.buscarPorDocumento(documento);
+    if (funcionarioAtualizado != null) {
 
-    return ResponseEntity.ok(funcionario);
-
+      return ResponseEntity.ok("Eventos do funcionário atualizados com sucesso. Salário líquido atualizado: "
+          + funcionarioAtualizado.toString());
+    } else {
+      // Retorna uma resposta de erro se o funcionário com o NIS especificado não for
+      // encontrado
+      return ResponseEntity.notFound().build();
+    }
   }
 
-  @PutMapping("/{documento}")
-  public ResponseEntity<Funcionario> atualizar(@PathVariable String documento,
-      @RequestBody Funcionario func) {
-
-    Funcionario atualizado = funcionarioService.atualizar(func);
-    System.out.println("Funcionário atualizado: " + atualizado);
-    return ResponseEntity.ok(atualizado);
-
-  }
-
-  @PutMapping("/funcionarios/{documento}")
-  public ResponseEntity<Funcionario> atualizarFuncionario(@PathVariable String documento,
-      @RequestBody Funcionario funcionario) {
-
-    Funcionario f = funcionarioService.atualizarEventos(documento, funcionario.getEventos());
-
-    funcionarioService.calcularSalarioLiquido(f);
-
-    return ResponseEntity.ok(f);
-  }
 
 }

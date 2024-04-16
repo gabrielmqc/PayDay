@@ -1,7 +1,6 @@
 package com.payment.demo.model;
 
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-@JsonDeserialize
 public class Eventos {
 
     private Float horaExtra50;
@@ -19,9 +17,9 @@ public class Eventos {
     private Float atraso;
     private Float descansoSemanalRemunerado;
     private Float adicionalNoturno;
-    private Float salarioFamilia; // Ajuste: Remova 'sSalarioFamilia' e 'sAuxilioCrecheBaba'
     private Float diariaViagem;
     private Float auxilioCrecheBaba;
+    private Float salarioFamilia;
     
     public Eventos() {
         // Construtor vazio necessário para Lombok

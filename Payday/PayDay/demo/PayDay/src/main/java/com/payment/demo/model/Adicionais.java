@@ -17,6 +17,7 @@ public class Adicionais {
     private Float diretor;
     private Float pregoeiro;
     private Float tempoDeEmpresa;
+    private Float salarioFamilia;
     private Float valeTransporte;
     private Float valeAlimentacao;
     

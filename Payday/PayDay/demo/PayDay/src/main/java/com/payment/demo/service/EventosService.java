@@ -5,55 +5,71 @@ import java.time.Period;
 
 import org.springframework.stereotype.Service;
 
+import com.payment.demo.model.Funcionario;
+
 @Service
 public class EventosService {
 
-    private Float valorTotalEventos;
+    private Float valorTotalEventos = 0.0f;
+    
 
-    public void adicionarHoraExtra50(Float nivelSalarial, Float quantiaEventos) {
-        Float horaExtra = nivelSalarial / 220 * 1.5f * quantiaEventos;
+    public void adicionarHoraExtra50(Funcionario funcionario, Float nivelSalarial, Float quantiaEventos) {
+        float salarioBase = nivelSalarial;
+        float eventos = quantiaEventos;
+        Float horaExtra = ((salarioBase / 220) * 1.5f) * eventos;
+        funcionario.getEventos().setHoraExtra50(horaExtra);
         this.valorTotalEventos += horaExtra;
     }
 
-    public void adicionarHoraExtra100(Float nivelSalarial, Float quantiaEventos) {
-        Float horaExtra = nivelSalarial / 220 * 2f * quantiaEventos;
+    public void adicionarHoraExtra100(Funcionario funcionario, Float nivelSalarial, Float quantiaEventos) {
+        float salarioBase = nivelSalarial;
+        float eventos = quantiaEventos;
+        Float horaExtra = ((salarioBase / 220) * 2f) * eventos;
+        funcionario.getEventos().setHoraExtra100(horaExtra);
         this.valorTotalEventos += horaExtra;
     }
 
-    public void subtrairFaltas(Float nivelSalarial, Float quantiaEventos) {
-        Float faltas = nivelSalarial / 30 * quantiaEventos;
+    public void subtrairFaltas(Funcionario funcionario, Float nivelSalarial, Float quantiaEventos) {
+        float salarioBase = nivelSalarial;
+        float eventos = quantiaEventos;
+        Float faltas = (salarioBase / 30) * eventos;
+        funcionario.getEventos().setFaltas(faltas);
         this.valorTotalEventos -= faltas;
     }
 
-    public void descontoPorAtraso(Float nivelSalarial, Float quantiaEventos) {
-        Float desconto = (quantiaEventos * nivelSalarial) / 220;
+    public void descontoPorAtraso(Funcionario funcionario, Float nivelSalarial, Float quantiaEventos) {
+        float salarioBase = nivelSalarial;
+        float eventos = quantiaEventos;
+        Float desconto = (eventos * salarioBase) / 220;
+        funcionario.getEventos().setAtraso(desconto);
         this.valorTotalEventos -= desconto;
     }
 
-    public void descansoSemanalRemunerado(Float nivelSalarial, Float quantiaEventos) {
+    public void descansoSemanalRemunerado(Funcionario funcionario, Float nivelSalarial, Float quantiaEventos) {
+        float salarioBase = nivelSalarial;
+        float eventos = quantiaEventos;
         Float diasFolgaBase = 4f;
-        Float diasFolgaAjustados = diasFolgaBase - quantiaEventos;
-        Float valorDescanso = (nivelSalarial / 30) * diasFolgaAjustados;
+        Float diasFolgaAjustados = diasFolgaBase - eventos;
+        Float valorDescanso = (salarioBase / 30) * diasFolgaAjustados;
+        funcionario.getEventos().setDescansoSemanalRemunerado(valorDescanso);
         this.valorTotalEventos += valorDescanso;
     }
 
-    public void adicionalNoturno(Float nivelSalarial, Float quantiaEventos) {
-        Float adicional = (nivelSalarial / 220) * 0.2f * quantiaEventos;
+    public void adicionalNoturno(Funcionario funcionario, Float nivelSalarial, Float quantiaEventos) {
+        float salarioBase = nivelSalarial;
+        float eventos = quantiaEventos;
+        Float adicional = ((salarioBase / 220) * 0.2f) * eventos;
+        funcionario.getEventos().setAdicionalNoturno(adicional);
         this.valorTotalEventos += adicional;
     }
 
-    public void salarioFamilia(Float nivelSalarial, int quantidadeDependentes) {
-        if (nivelSalarial <= 1819.26) {
-            Float valorPorFilho = 62.04f;
-            Float salarioFamilia = valorPorFilho * quantidadeDependentes;
-            this.valorTotalEventos += salarioFamilia;
-        }
-    }
-
-    public void diariaViagem(Float nivelSalarial, Float quantiaEventos) {
-        Float valorDiarias = 400 * quantiaEventos;
-        Float limiteIntegracao = nivelSalarial / 2;
+    public void diariaViagem(Funcionario funcionario, Float nivelSalarial, Float quantiaEventos) {
+        float salarioBase = nivelSalarial;
+        float eventos = quantiaEventos;
+        Float valorDiarias = 400 * eventos;
+        Float limiteIntegracao = salarioBase / 2;
         if (valorDiarias > limiteIntegracao) {
+            funcionario.getEventos().setDiariaViagem(valorDiarias);
             this.valorTotalEventos += valorDiarias;
         }
     }

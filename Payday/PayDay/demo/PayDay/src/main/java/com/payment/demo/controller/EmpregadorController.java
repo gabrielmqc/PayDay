@@ -1,30 +1,26 @@
 package com.payment.demo.controller;
 
-import java.util.List;
+import java.io.IOException;
+import java.io.File;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.payment.demo.model.Empregador;
-import com.payment.demo.service.EmpregadorService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping("/empregadores")
 public class EmpregadorController {
 
-    @Autowired
-    private EmpregadorService empregadorService;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
-    @ResponseBody
 
-    @GetMapping("/empregadores")
-    public List<Empregador> listar() {
-        List<Empregador> empregador = empregadorService.carregarEmpregador();
-        System.err.println(empregador);
-        return empregador;
+    @GetMapping("/get")
+    public ResponseEntity<Object> getData() throws IOException {
+        Object data = objectMapper.readValue(new File("C:\\Users\\gabri\\OneDrive\\Área de Trabalho\\Nova pasta\\PayDay\\Payday\\PayDay\\demo\\PayDay\\src\\main\\resources\\empregador.json"), Object.class);
+        return ResponseEntity.ok(data);
     }
 
 }

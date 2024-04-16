@@ -5,11 +5,13 @@ package com.payment.demo.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 
 public class PessoaFisica {
 
@@ -27,11 +29,6 @@ public class PessoaFisica {
     private String raca;
     private boolean ativoInativo;
 
-
-
-    public PessoaFisica(){
-
-    }
   
     
 }

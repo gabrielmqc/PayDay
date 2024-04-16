@@ -1,169 +1,90 @@
 package com.payment.demo.service;
 
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.payment.demo.model.Dependente;
-import com.payment.demo.model.Eventos;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.payment.demo.model.Funcionario;
-import com.payment.demo.model.PessoaFisica;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
+import java.io.File;
+import java.io.IOException;
 
 @Service
 public class FuncionarioService {
 
     @Autowired
     private EventosService eventosService;
+
+    @Autowired
     private AdicionaisService adicionaisService;
 
-    String jsonFuncionario = "{resources/funcionario.json}";
+    private static final String FILE_PATH = "C:\\Users\\gabri\\OneDrive\\Área de Trabalho\\Nova pasta\\PayDay\\Payday\\PayDay\\demo\\PayDay\\src\\main\\resources\\funcionario.json";
 
-    private List<Funcionario> funcionarios;
-
-    public FuncionarioService() {
-        funcionarios = carregarFuncionarios();
-    }
-
-    public List<Funcionario> carregarFuncionarios() {
-
-        JsonObject jsonObject = new JsonObject();
-
-        System.out.println(jsonObject);
-        List<Funcionario> clientList = null;
+    public Funcionario encontrarFuncionarioPorNIS(String nis) {
         try {
-            Gson gson = new Gson();
-            FileReader reader = new FileReader(
-                    "C:\\Users\\gabri\\OneDrive\\Área de Trabalho\\Nova pasta\\PayDay\\Payday\\PayDay\\demo\\PayDay\\src\\main\\resources\\funcionario.json");
-            clientList = gson.fromJson(reader, new TypeToken<List<Funcionario>>() {
-            }.getType());
+            // Carregar dados do arquivo JSON
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<Funcionario> funcionarios = objectMapper.readValue(new File(FILE_PATH),
+                    objectMapper.getTypeFactory().constructCollectionType(List.class, Funcionario.class));
 
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return clientList;
+            // Percorre a lista para encontrar o funcionário com o NIS específico
+            for (Funcionario funcionario : funcionarios) {
+                funcionario.setSalarioLiquido(0f);
+                funcionario.getEventos().setAdicionalNoturno(0f);
+                funcionario.getEventos().setAtraso(0f);
+                funcionario.getEventos().setAuxilioCrecheBaba(0f);
+                funcionario.getEventos().setDescansoSemanalRemunerado(0f);
+                funcionario.getEventos().setDiariaViagem(0f);
+                funcionario.getEventos().setFaltas(0f);
+                funcionario.getEventos().setHoraExtra100(0f);
+                funcionario.getEventos().setHoraExtra50(0f);
+                // zera outros campo
 
-    }
-
-    public Funcionario buscarPorDocumento(String documento) {
-
-        List<Funcionario> funcionarios = carregarFuncionarios();
-
-        for (Funcionario f : funcionarios) {
-            if (f.getDocumento().equals(documento)) {
-                return f;
+                // Verifica se o NIS do funcionário corresponde ao NIS fornecido
+                if (funcionario.getNis().equals(nis)) {
+                    // Retorna o funcionário encontrado
+                    return funcionario;
+                }
             }
-        }
 
-        return null;
-
-    }
-
-    public Funcionario atualizar(Funcionario func) {
-    
-        Funcionario encontrado = buscarPorDocumento(func.getDocumento());
-    
-        if(encontrado != null) {
-          encontrado.getEventos().setHoraExtra100(func.getEventos().getHoraExtra100()); 
-          encontrado.setDocumento(func.getDocumento());
-          encontrado.setCargo(func.getCargo());
-        }
-        return encontrado;
-    }
-
-    private Funcionario getByCPF(String cpf) {
-        // busca na lista
-        for(Funcionario f : funcionarios) {
-          if(f.getDocumento().equals(cpf)) {
-            return f;
-          } 
-        }
-        return null;
-      }
-
-    public Funcionario atualizarEventos(String documento, Eventos novosEventos) {
-
-        // Busca lista de funcionários
-        Funcionario funcionario = getByCPF(documento);
-
-
-        // Verifica se encontrou
-        if (funcionario == null) {
+            // Retorna null se o funcionário com o NIS especificado não for encontrado
+            return null;
+        } catch (IOException e) {
+            // Lidar com exceções de IO, se necessário
+            e.printStackTrace();
             return null;
         }
-
-        // Atualiza os eventos
-        if (novosEventos.getHoraExtra50() != null) {
-            funcionario.getEventos().setHoraExtra50(novosEventos.getHoraExtra50());
-        }
-
-        if (novosEventos.getHoraExtra100() != null) {
-            funcionario.getEventos().setHoraExtra100(novosEventos.getHoraExtra100());
-        }
-
-        if (novosEventos.getFaltas() != null) {
-            funcionario.getEventos().setFaltas(novosEventos.getFaltas());
-        }
-
-        if (novosEventos.getAtraso() != null) {
-            funcionario.getEventos().setAtraso(novosEventos.getAtraso());
-        }
-
-        if (novosEventos.getDescansoSemanalRemunerado() != null) {
-            funcionario.getEventos().setDescansoSemanalRemunerado(novosEventos.getDescansoSemanalRemunerado());
-        }
-
-        if (novosEventos.getAdicionalNoturno() != null) {
-            funcionario.getEventos().setAdicionalNoturno(novosEventos.getAdicionalNoturno());
-        }
-
-        // Atualiza outros eventos
-
-        // Obtém index e atualiza na lista
-        int index = funcionarios.indexOf(funcionario);
-        funcionarios.set(index, funcionario);
-
-        return funcionario;
-
     }
 
-
     public void executarEventos(Funcionario funcionario) {
+
+        eventosService.resetarValorTotalEventos();
         // Verifica e executa cada tipo de evento, se estiver presente
         if (funcionario.getEventos().getHoraExtra50() != null) {
-            eventosService.adicionarHoraExtra50(funcionario.getNivelSalarial(),
+            eventosService.adicionarHoraExtra50(funcionario,funcionario.getNivelSalarial(),
                     funcionario.getEventos().getHoraExtra50());
         }
         if (funcionario.getEventos().getHoraExtra100() != null) {
-            eventosService.adicionarHoraExtra100(funcionario.getNivelSalarial(),
+            eventosService.adicionarHoraExtra100(funcionario, funcionario.getNivelSalarial(),
                     funcionario.getEventos().getHoraExtra100());
         }
         if (funcionario.getEventos().getFaltas() != null) {
-            eventosService.subtrairFaltas(funcionario.getNivelSalarial(), funcionario.getEventos().getFaltas());
+            eventosService.subtrairFaltas(funcionario, funcionario.getNivelSalarial(), funcionario.getEventos().getFaltas());
         }
         if (funcionario.getEventos().getAtraso() != null) {
-            eventosService.descontoPorAtraso(funcionario.getNivelSalarial(), funcionario.getEventos().getAtraso());
+            eventosService.descontoPorAtraso(funcionario, funcionario.getNivelSalarial(), funcionario.getEventos().getAtraso());
         }
         if (funcionario.getEventos().getDescansoSemanalRemunerado() != null) {
-            eventosService.descansoSemanalRemunerado(funcionario.getNivelSalarial(),
+            eventosService.descansoSemanalRemunerado(funcionario, funcionario.getNivelSalarial(),
                     funcionario.getEventos().getDescansoSemanalRemunerado());
         }
         if (funcionario.getEventos().getAdicionalNoturno() != null) {
-            eventosService.adicionalNoturno(funcionario.getNivelSalarial(),
+            eventosService.adicionalNoturno(funcionario, funcionario.getNivelSalarial(),
                     funcionario.getEventos().getAdicionalNoturno());
         }
-        // if (funcionario.getSalarioFamilia() != null) {
-        // funcionarioService.salarioFamilia(funcionario.getNivelSalarial(),
-        // funcionario.getQuantidadeDependentes());
-        // }
         if (funcionario.getEventos().getDiariaViagem() != null) {
-            eventosService.diariaViagem(funcionario.getNivelSalarial(), funcionario.getEventos().getDiariaViagem());
+            eventosService.diariaViagem(funcionario, funcionario.getNivelSalarial(), funcionario.getEventos().getDiariaViagem());
         }
         if (funcionario.getEventos().getAuxilioCrecheBaba() != null) {
             eventosService.auxilioCrecheBaba(funcionario.getDependente().getDataDeNascimento(),
@@ -173,26 +94,35 @@ public class FuncionarioService {
 
     public void executarAdicionais(Funcionario funcionario) {
 
+        adicionaisService.resetarValorTotalAdicionais();
+
         if (funcionario.getAdicionais().getInsalubridade() != null) {
-            adicionaisService.adicionarInsalubridade(funcionario.getNivelSalarial());
+            adicionaisService.adicionarInsalubridade(funcionario.getAdicionais().getInsalubridade(),
+                    funcionario.getNivelSalarial());
         }
         if (funcionario.getAdicionais().getPericulosidade() != null) {
-            adicionaisService.adicionarPericulosidade(funcionario.getNivelSalarial());
+            adicionaisService.adicionarPericulosidade(funcionario.getAdicionais().getPericulosidade(),
+                    funcionario.getNivelSalarial());
         }
         if (funcionario.getAdicionais().getAdicionalNoturno() != null) {
-            adicionaisService.adicionarNoturno(funcionario.getNivelSalarial());
+            adicionaisService.adicionarNoturno(funcionario.getAdicionais().getAdicionalNoturno(),
+                    funcionario.getNivelSalarial());
         }
         if (funcionario.getAdicionais().getChefe() != null) {
-            adicionaisService.adicionarGratificacaoChefe(funcionario.getNivelSalarial());
+            adicionaisService.adicionarGratificacaoChefe(funcionario.getAdicionais().getChefe(),
+                    funcionario.getNivelSalarial());
         }
         if (funcionario.getAdicionais().getDiretor() != null) {
-            adicionaisService.adicionarGratificacaoDiretor(funcionario.getNivelSalarial());
+            adicionaisService.adicionarGratificacaoDiretor(funcionario.getAdicionais().getDiretor(),
+                    funcionario.getNivelSalarial());
         }
         if (funcionario.getAdicionais().getPregoeiro() != null) {
-            adicionaisService.adicionarGratificacaoPregoeiro(funcionario.getNivelSalarial());
+            adicionaisService.adicionarGratificacaoPregoeiro(funcionario.getAdicionais().getPregoeiro(),
+                    funcionario.getNivelSalarial());
         }
         if (funcionario.getAdicionais().getTempoDeEmpresa() != null) {
-            adicionaisService.adicionarTempoDeEmpresa(funcionario.getNivelSalarial(),
+            adicionaisService.adicionarTempoDeEmpresa(funcionario.getAdicionais().getTempoDeEmpresa(),
+                    funcionario.getNivelSalarial(),
                     funcionario.getDataDeContratacao());
         }
     }
@@ -252,15 +182,20 @@ public class FuncionarioService {
 
         Float salarioBruto = salarioBase + eventos + adicionais;
 
+        
         // Calcula descontos
         Float inss = calcularINSS(salarioBruto);
         Float irrf = calcularIRRF(salarioBruto);
         Float fgts = calcularFGTS(salarioBruto);
 
+        funcionario.setInss(inss);
+        funcionario.setFgts(fgts);
+        funcionario.setIrrf(irrf);
+        funcionario.setSalarioBruto(salarioBruto);
+        
         // Salário líquido
         Float salarioLiquido = salarioBruto - inss - irrf - fgts;
 
-        // Set no funcionário
         funcionario.setSalarioLiquido(salarioLiquido);
 
     }
