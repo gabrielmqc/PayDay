@@ -1,12 +1,12 @@
-[
+[   
     {
-        "nome": "gaco",
-        "cnpj": "5565",
-        "endereco": "56dsadq",
-        "telefone": "45 98989",
-        "email": "gabriels ",
-        "dataCriacao": "2022-56-23",
-        "inscricaoEstadual": "99898989",
-        "inscricaoMunicipal": "5656598"
+
+        "nome": "Googli",
+            "documento": "53.094.395/0001-03",
+            "endereco": "Rua Martini 778",
+            "telefone": "(35) 2268-6134",
+            "email": "googli@hotmail.com",
+            "dataCriacao": "2002-06-23",
+            "QtdColaboradores" : "122"
     }
 ]
