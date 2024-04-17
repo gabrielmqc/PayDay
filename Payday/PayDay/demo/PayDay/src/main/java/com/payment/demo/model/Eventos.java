@@ -15,11 +15,9 @@ public class Eventos {
     private Float horaExtra100;
     private Float faltas;
     private Float atraso;
-    private Float descansoSemanalRemunerado;
     private Float adicionalNoturno;
     private Float diariaViagem;
     private Float auxilioCrecheBaba;
-    private Float salarioFamilia;
     
     public Eventos() {
         // Construtor vazio necessário para Lombok

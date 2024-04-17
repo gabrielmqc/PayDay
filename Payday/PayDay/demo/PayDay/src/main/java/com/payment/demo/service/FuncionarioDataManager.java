@@ -33,7 +33,6 @@ public class FuncionarioDataManager {
                     funcionario.getEventos().setHoraExtra100(novosEventos.getHoraExtra100());
                     funcionario.getEventos().setFaltas(novosEventos.getFaltas());
                     funcionario.getEventos().setAtraso(novosEventos.getAtraso());
-                    funcionario.getEventos().setDescansoSemanalRemunerado(novosEventos.getDescansoSemanalRemunerado());
                     funcionario.getEventos().setAdicionalNoturno(novosEventos.getAdicionalNoturno());
                     funcionario.getEventos().setDiariaViagem(novosEventos.getDiariaViagem());
                     funcionario.getEventos().setAuxilioCrecheBaba(novosEventos.getAuxilioCrecheBaba());
