@@ -1,0 +1,72 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+form {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(2, 1fr); /* Duas colunas */
+    grid-template-areas:
+        "empregadorSelect horaExtra50"
+        "funcionarioSelect horaExtra100"
+        "faltas atraso"
+        "descansoSemanalRemunerado adicionalNoturno"
+        "diariaViagem auxilioCrecheBaba"
+        "salarioFamilia salarioFamilia"; /* Áreas do grid */
+}
+
+label {
+    text-align: left;
+}
+
+input[type="number"],
+select {
+    width: 100%; /* Largura total das caixas de entrada */
+    box-sizing: border-box;
+    padding: 5px; /* Preenchimento interno */
+    margin-bottom: 5px; /* Espaçamento inferior entre as caixas */
+}
+
+#empregadorSelect {
+    grid-area: empregadorSelect; /* Posiciona o empregadorSelect na área específica */
+}
+
+#funcionarioSelect {
+    grid-area: funcionarioSelect; /* Posiciona o funcionarioSelect na área específica */
+}
+
+#horaExtra50 {
+    grid-area: horaExtra50; /* Posiciona o horaExtra50 na área específica */
+}
+
+#horaExtra100 {
+    grid-area: horaExtra100; /* Posiciona o horaExtra100 na área específica */
+}
+
+#faltas {
+    grid-area: faltas; /* Posiciona o faltas na área específica */
+}
+
+#atraso {
+    grid-area: atraso; /* Posiciona o atraso na área específica */
+}
+
+#descansoSemanalRemunerado {
+    grid-area: descansoSemanalRemunerado; /* Posiciona o descansoSemanalRemunerado na área específica */
+}
+
+#adicionalNoturno {
+    grid-area: adicionalNoturno; /* Posiciona o adicionalNoturno na área específica */
+}
+
+#diariaViagem {
+    grid-area: diariaViagem; /* Posiciona o diariaViagem na área específica */
+}
+
+#auxilioCrecheBaba {
+    grid-area: auxilioCrecheBaba; /* Posiciona o auxilioCrecheBaba na área específica */
+}
+
+#salarioFamilia {
+    grid-area: salarioFamilia; /* Posiciona o salarioFamilia na área específica */
+}
